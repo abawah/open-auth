@@ -19,202 +19,291 @@ We support Next.js, React, and JavaScript frontends, along with any backend that
 <img alt="Stack Auth Setup" src=".github/assets/create-project.gif" width="400" />
 </div>
 
-## Table of contents
+Below is a detailed documentation for the **Open-Auth** application, inspired by the official documentation of **Stack Auth** (https://docs.stack-auth.com/next/overview). This documentation is structured similarly but tailored for the new name **Open-Auth** and includes all necessary details for understanding, setting up, and using the application.
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+---
 
-- [How is this different from X?](#how-is-this-different-from-x)
-- [✨ Features](#-features)
-- [📦 Installation & Setup](#-installation--setup)
-- [🌱 Some community projects built with Stack Auth](#-some-community-projects-built-with-stack-auth)
-  - [Templates](#templates)
-  - [Examples](#examples)
-- [🏗 Development & Contribution](#-development--contribution)
-  - [Requirements](#requirements)
-  - [Setup](#setup)
-  - [Database migrations](#database-migrations)
-  - [Chat with the codebase](#chat-with-the-codebase)
-  - [Architecture overview](#architecture-overview)
-- [❤ Contributors](#-contributors)
+# Open-Auth Documentation
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+Open-Auth is an open-source, modular, and scalable authentication system designed to simplify user authentication and authorization in modern web applications. Built with Node.js, Express.js, and MongoDB, Open-Auth provides a robust foundation for implementing secure authentication workflows, including user registration, login, role-based access control, and JWT-based authentication.
 
-## How is this different from X?
+---
 
-Ask yourself about `X`:
+## Overview
 
-- Is `X` open-source?
-- Is `X` developer-friendly, well-documented, and lets you get started in minutes?
-- Besides authentication, does `X` also do authorization and user management (see feature list below)?
+Open-Auth is designed to be:
 
-If you answered "no" to any of these questions, then that's how Stack Auth is different from `X`.
+- **Secure**: Uses bcrypt for password hashing and JWT for stateless authentication.
+- **Modular**: Easy to integrate into existing projects or use as a standalone service.
+- **Scalable**: Built with scalability in mind, making it suitable for small to large applications.
+- **Customizable**: Allows developers to extend functionality and tailor it to their needs.
 
-## ✨ Features
+---
 
-To get notified first when we add new features, please subscribe to [our newsletter](https://stack-auth.beehiiv.com/subscribe).
+## Features
 
-| | |
-|-|:-:|
-| <h3>`<SignIn/>` and `<SignUp/>`</h3> Authentication components that support OAuth, password credentials, and magic links, with shared development keys to make setup faster. All components support dark/light modes. | <img alt="Sign-in component" src=".github/assets/dark-light-mode.png" width="250px"> |
-| <h3>Idiomatic Next.js APIs</h3> We build on server components, React hooks, and route handlers. | ![Dark/light mode](.github/assets/components.png) |
-| <h3>User dashboard</h3> Dashboard to filter, analyze, and edit users. Replaces the first internal tool you would have to build. | ![User dashboard](.github/assets/dashboard.png) |
-| <h3>Account settings</h3> Lets users update their profile, verify their e-mail, or change their password. No setup required. | <img alt="Account settings component" src=".github/assets/account-settings.png" width="300px"> |
-| <h3>Multi-tenancy & teams</h3> Manage B2B customers with an organization structure that makes sense and scales to millions. | <img alt="Selected team switcher component" src=".github/assets/team-switcher.png" width="400px"> |
-| <h3>Role-based access control</h3> Define an arbitrary permission graph and assign it to users. Organizations can create org-specific roles. | <img alt="RBAC" src=".github/assets/permissions.png"  width="400px"> |
-| <h3>OAuth Connections</h3>Beyond login, Stack Auth can also manage access tokens for third-party APIs, such as Outlook and Google Calendar. It handles refreshing tokens and controlling scope, making access tokens accessible via a single function call. | <img alt="OAuth tokens" src=".github/assets/connected-accounts.png"  width="250px"> |
-| <h3>Passkeys</h3> Support for passwordless authentication using passkeys, allowing users to sign in securely with biometrics or security keys across all their devices. | <img alt="OAuth tokens" src=".github/assets/passkeys.png"  width="400px"> |
-| <h3>Impersonation</h3> Impersonate users for debugging and support, logging into their account as if you were them. | <img alt="Webhooks" src=".github/assets/impersonate.png"  width="350px"> |
-| <h3>Webhooks</h3> Get notified when users use your product, built on Svix. | <img alt="Webhooks" src=".github/assets/stack-webhooks.png"  width="300px"> |
-| <h3>Automatic emails</h3> Send customizable emails on triggers such as sign-up, password reset, and email verification, editable with a WYSIWYG editor. | <img alt="Email templates" src=".github/assets/email-editor.png"  width="400px"> |
-| <h3>User session & JWT handling</h3> Stack Auth manages refresh and access tokens, JWTs, and cookies, resulting in the best performance at no implementation cost. | <img alt="User button" src=".github/assets/user-button.png"  width="400px"> |
-| <h3>M2M authentication</h3> Use short-lived access tokens to authenticate your machines to other machines. | <img src=".github/assets/m2m-auth.png" alt="M2M authentication"  width="400px"> |
+- **User Authentication**:
+  - User registration, login, and logout.
+  - Secure password storage using bcrypt.
+- **JWT-Based Authentication**:
+  - Stateless authentication using JSON Web Tokens (JWT).
+  - Configurable token expiration.
+- **Role-Based Access Control (RBAC)**:
+  - Define user roles and permissions.
+  - Restrict access to specific routes based on roles.
+- **API Endpoints**:
+  - RESTful API for authentication and user management.
+- **Database Integration**:
+  - MongoDB for storing user data.
+  - Mongoose for object data modeling.
+- **Environment Configuration**:
+  - Uses `.env` files for sensitive data and configuration.
+- **Validation**:
+  - Input validation for user registration and login.
+- **Error Handling**:
+  - Centralized error handling for consistent API responses.
 
+---
 
-## 📦 Installation & Setup
+## Getting Started
 
-To install Stack Auth in your Next.js project (for React, JavaScript, or other frameworks, see our [complete documentation](https://docs.stack-auth.com)):
+### Prerequisites
 
-1. Run Stack Auth's installation wizard with the following command:
-    ```bash
-    npx @stackframe/init-stack@latest
-    ```
-   
-   If you prefer not to open a browser during setup (useful for CI/CD environments or restricted environments):
-    ```bash
-    npx @stackframe/init-stack@latest --no-browser
-    ```
+Before using Open-Auth, ensure you have the following installed:
 
-2. Then, create an account on the [Stack Auth dashboard](https://app.stack-auth.com/projects), create a new project with an API key, and copy its environment variables into the .env.local file of your Next.js project:
-    ```
-    NEXT_PUBLIC_STACK_PROJECT_ID=<your-project-id>
-    NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY=<your-publishable-client-key>
-    STACK_SECRET_SERVER_KEY=<your-secret-server-key>
-    ```
-3. That's it! You can run your app with `npm run dev` and go to [http://localhost:3000/handler/signup](http://localhost:3000/handler/signup) to see the sign-up page. You can also check out the account settings page at [http://localhost:3000/handler/account-settings](http://localhost:3000/handler/account-settings).
+- [Node.js](https://nodejs.org/) (v14 or higher)
+- [MongoDB](https://www.mongodb.com/) (local or cloud instance)
+- [Git](https://git-scm.com/) (optional, for cloning the repository)
 
-Check out the [documentation](https://docs.stack-auth.com/getting-started/setup) for a more detailed guide.
+### Installation
 
-## 🌱 Some community projects built with Stack Auth
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/your-repo/open-auth.git
+   cd open-auth
+   ```
 
-Have your own? Happy to feature it if you create a PR or message us on [Discord](https://discord.stack-auth.com).
+2. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-### Templates
-- [Stack Auth Template by Stack Auth Team](https://github.com/stack-auth/stack-auth-template)
-- [Next SaaSkit by wolfgunblood](https://github.com/wolfgunblood/nextjs-saaskit)
-- [SaaS Boilerplate by Robin Faraj](https://github.com/robinfaraj/saas-boilerplate)
+3. **Set Up Environment Variables**:
+   - Create a `.env` file in the root directory.
+   - Add the following variables:
+     ```env
+     PORT=3000
+     MONGO_URI=mongodb://localhost:27017/open-auth
+     JWT_SECRET=your_jwt_secret_key
+     JWT_EXPIRES_IN=1d
+     ```
 
-### Examples
-- [Stack Auth Example by career-tokens](https://github.com/career-tokens/StackYCAuth)
-- [Stack Auth Demo by the Stack Auth team](https://github.com/stack-auth/stack-auth/tree/dev/examples/demo)
-- [Stack Auth E-Commerce Example by the Stack Auth team](https://github.com/stack-auth/stack-auth/tree/dev/examples/e-commerce)
+4. **Start the Server**:
+   ```bash
+   npm start
+   ```
 
-## 🏗 Development & Contribution
+   The server will start running on `http://localhost:3000`.
 
-This is for you if you want to contribute to the Stack Auth project or run the Stack Auth dashboard locally.
+---
 
-**Important**: Please read the [contribution guidelines](CONTRIBUTING.md) carefully and join [our Discord](https://discord.stack-auth.com) if you'd like to help.
+## API Reference
 
-### Requirements
+### Authentication
 
-- Node v20
-- pnpm v9
-- Docker
+#### Register a New User
+- **Endpoint**: `POST /api/auth/register`
+- **Request Body**:
+  ```json
+  {
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "password123"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "token": "your_jwt_token"
+  }
+  ```
 
-### Setup
+#### Log In
+- **Endpoint**: `POST /api/auth/login`
+- **Request Body**:
+  ```json
+  {
+    "email": "john@example.com",
+    "password": "password123"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "token": "your_jwt_token"
+  }
+  ```
 
-Pre-populated .env files for the setup below are available and used by default in `.env.development` in each of the packages. (Note: If you're creating a production build (eg. with `pnpm run build`), you must supply the environment variables manually.)
+#### Log Out
+- **Endpoint**: `POST /api/auth/logout`
+- **Headers**:
+  ```http
+  Authorization: Bearer <your_jwt_token>
+  ```
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "message": "Logged out successfully"
+  }
+  ```
 
-In a new terminal:
+### User Management
 
-```sh
-pnpm install
+#### Get Current User Profile
+- **Endpoint**: `GET /api/users/me`
+- **Headers**:
+  ```http
+  Authorization: Bearer <your_jwt_token>
+  ```
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "data": {
+      "name": "John Doe",
+      "email": "john@example.com"
+    }
+  }
+  ```
 
-# Build the packages and generate code. We only need to do this once, as `pnpm dev` will do this from now on
-pnpm build:packages
-pnpm codegen
+#### Update Current User Profile
+- **Endpoint**: `PUT /api/users/me`
+- **Headers**:
+  ```http
+  Authorization: Bearer <your_jwt_token>
+  ```
+- **Request Body**:
+  ```json
+  {
+    "name": "Jane Doe"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "data": {
+      "name": "Jane Doe",
+      "email": "john@example.com"
+    }
+  }
+  ```
 
-# Start the dependencies (DB, Inbucket, etc.) as Docker containers, seeding the DB with the Prisma schema
-pnpm restart-deps
-# restart-deps is the same as:
-#   pnpm run stop-deps  (if the containers are already running)
-#   pnpm run start-deps
+#### Delete Current User Account
+- **Endpoint**: `DELETE /api/users/me`
+- **Headers**:
+  ```http
+  Authorization: Bearer <your_jwt_token>
+  ```
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "message": "User deleted successfully"
+  }
+  ```
 
-# Start the dev server
-pnpm dev
-# For systems with limited resources, you can run a minimal development setup with just the backend and dashboard
-# pnpm run dev:basic
+---
 
-# In a different terminal, run tests in watch mode
-pnpm test
+## Error Handling
+
+Open-Auth uses a centralized error handling mechanism. All errors are returned in the following format:
+
+```json
+{
+  "success": false,
+  "message": "Error message",
+  "error": {
+    "code": 400,
+    "details": "Additional error details"
+  }
+}
 ```
 
-You can now open the dev launchpad at [http://localhost:8100](http://localhost:8100). From there, you can navigate to the dashboard at [http://localhost:8101](http://localhost:8101), API on port 8102, demo on port 8103, docs on port 8104, Inbucket (e-mails) on port 8105, and Prisma Studio on port 8106. See the dev launchpad for a list of all running services.
+### Common Error Codes
 
-Your IDE may show an error on all `@stackframe/XYZ` imports. To fix this, simply restart the TypeScript language server; for example, in VSCode you can open the command palette (Ctrl+Shift+P) and run `Developer: Reload Window` or `TypeScript: Restart TS server`.
+- **400**: Bad Request (e.g., invalid input).
+- **401**: Unauthorized (e.g., missing or invalid token).
+- **404**: Not Found (e.g., resource not found).
+- **500**: Internal Server Error (e.g., server-side issue).
 
-You can also open Prisma Studio to see the database interface and edit data directly:
+---
 
-```sh
-pnpm run prisma studio
-```
+## Configuration
 
+Open-Auth uses environment variables for configuration. Below are the key variables:
 
-### Database migrations
+| Variable       | Description                          | Default Value               |
+|----------------|--------------------------------------|-----------------------------|
+| `PORT`         | Port on which the server runs.       | `3000`                      |
+| `MONGO_URI`    | MongoDB connection string.           | `mongodb://localhost:27017/open-auth` |
+| `JWT_SECRET`   | Secret key for signing JWTs.         | (Required)                  |
+| `JWT_EXPIRES_IN` | JWT expiration time.               | `1d` (1 day)                |
 
-If you make changes to the Prisma schema, you need to run the following command to create a migration:
+---
 
-```sh
-pnpm run prisma migrate dev
-```
+## Customization
 
-### Chat with the codebase
+### Extending Functionality
 
-Storia trained an [AI on our codebase](https://sage.storia.ai/stack-auth) that can answer questions about using and contributing to Stack Auth.
+Open-Auth is designed to be modular. You can extend its functionality by:
 
-### Architecture overview
+1. Adding new routes in the `routes` directory.
+2. Creating new controllers in the `controllers` directory.
+3. Defining new models in the `models` directory.
 
-```mermaid
-  graph TB
-      Website[Your Website]
-      User((User))
-      Admin((Admin))
-      subgraph "Stack Auth System"
-          Dashboard[Stack Auth Dashboard<br/>/apps/dashboard]
-          Backend[Stack Auth API Backend<br/>/apps/backend]
-          Database[(PostgreSQL Database)]
-          EmailService[Email Service<br/>Inbucket]
-          WebhookService[Webhook Service<br/>Svix]
-          StackSDK[Client SDK<br/>/packages/stack]
-          subgraph Shared
-              StackUI[Stack Auth UI<br/>/packages/stack-ui]
-              StackShared[Stack Auth Shared<br/>/packages/stack-shared]
-              StackEmails[Stack Auth Emails<br/>/packages/stack-emails]
-          end
-      end
-      Admin --> Dashboard
-      User --> Website
-      Website --> StackSDK
-      Backend --> Database
-      Backend --> EmailService
-      Backend --> WebhookService
-      Dashboard --> Shared
-      Dashboard --> StackSDK
-      StackSDK --HTTP Requests--> Backend
-      StackSDK --> Shared
-      Backend --> Shared
-      classDef container fill:#1168bd,stroke:#0b4884,color:#ffffff
-      classDef database fill:#2b78e4,stroke:#1a4d91,color:#ffffff
-      classDef external fill:#999999,stroke:#666666,color:#ffffff
-      classDef deprecated stroke-dasharray: 5 5
-      class Dashboard,Backend,EmailService,WebhookService,Website container
-      class Database database
-```
+### Adding Roles and Permissions
 
-Thanks to [CodeViz](https://www.codeviz.ai) for generating the diagram!
+To implement role-based access control (RBAC):
 
-## ❤ Contributors
+1. Update the `User` model to include a `role` field.
+2. Create middleware to check user roles before granting access to specific routes.
 
-<a href="https://github.com/stack-auth/stack-auth/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=stack-auth/stack&columns=9" width="100%" />
-</a>
+---
+
+## Contributing
+
+We welcome contributions! Here’s how you can help:
+
+1. Fork the repository.
+2. Create a new branch for your feature or bugfix.
+3. Commit your changes and push to the branch.
+4. Submit a pull request.
+
+Please ensure your code follows the project’s coding standards and includes appropriate tests.
+
+---
+
+## License
+
+Open-Auth is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+## Support
+
+For questions, issues, or feature requests, please open an issue on the [GitHub repository](https://github.com/your-repo/open-auth).
+
+---
+
+## Acknowledgments
+
+- Inspired by modern authentication best practices.
+- Built with the support of the open-source community.
+
+---
+
+This documentation provides a comprehensive guide to using and customizing Open-Auth. For more details, refer to the official documentation or explore the source code.
